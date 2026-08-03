@@ -4,112 +4,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Quiz Application</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .main {
+            width: 100%;
+            max-width: 500px;
+            background-color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
         h1 {
             text-align: center;
-        }
-body{
-    font-size: xx-large;
-}
-#timer{
-background-color: rgb(52, 211, 240);
-width: 20%;
-
-border: 2px solid rgb(245, 0, 0);
-border-radius: 40%;
-text-align: center;
-
-}
-#resultDiv{
-    
-background-color: rgb(242, 235, 247);
-margin:auto;
-padding: 40px;
-text-align: justify;
-width: 50%;
-}
-
-.main{
-padding: auto;
-    border: 3px solid black;
-}
-
-
-#optionsDiv{
-
-background-color: rgb(224, 187, 250);
-margin:auto;
-padding: 40px;
-text-align: justify;
-width: 50%;
-
-}
-#btn{
-padding: 10px;
-border: 2px solid black;
-width: 20%;
-color: white;
-border-radius: 20%;
-background-color: blue;
-}
-
-        /* Tablets ke liye (Screens under 768px) */
-        @media screen and (max-width: 768px) {
-            #optionsDiv, #resultDiv {
-                width: 80%; /* Width barha di taake screen par space bache */
-                padding: 25px;
-            }
-            body {
-                font-size: 1.3rem; /* Font thora chota kiya */
-            }
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
         }
 
-        /* Mobile Phones ke liye (Screens under 480px) */
-        @media screen and (max-width: 480px) {
-            #optionsDiv, #resultDiv {
-                width: 95%; /* Mobile par takreeban full width */
-                padding: 15px;
-            }
-            body {
-                font-size: 1.1rem; /* Mobile ke hisab se comfortable font size */
-            }
-            .main {
-                padding: 10px;
-                border: 2px solid black;
-            }
-            #btn {
-                width: 100%; /* Mobile par button full width ho jaye ga */
-            }
+        #timer {
+            background-color: rgb(52, 211, 240);
+            width: 80px;
+            padding: 5px;
+            border: 2px solid rgb(245, 0, 0);
+            border-radius: 20px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
         }
 
+       
+        #optionsDiv {
+            background-color: rgb(224, 187, 250);
+            padding: 25px;
+            border-radius: 8px;
+            width: 100%;
+        }
 
+        #ques {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        
+        #optionsDiv input[type="radio"] {
+            margin-bottom: 15px;
+            transform: scale(1.2); 
+            cursor: pointer;
+        }
+
+        #optionsDiv label {
+            font-size: 18px;
+            margin-left: 8px;
+            cursor: pointer;
+        }
+
+        #btn {
+            display: block;
+            width: 100%; 
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            background-color: blue;
+            border: 2px solid black;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        #btn:disabled {
+            background-color: #cccccc;
+            border-color: #999999;
+            cursor: not-allowed;
+        }
+
+        #resultDiv {
+            background-color: rgb(242, 235, 247);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
     </style>
 </head>
 
-<body><div class="main">
+<body>
 
-    <h1>Start your Quizz </h1>
-   
-    <div id="optionsDiv"> <div id="timer">⌚</div>
-        <p id="ques"></p>
-        <input onclick="clicked()" name="options" value="1" type="radio">
-        <label id="opt1"></label><br>
+    <div class="main">
+        <h1>Start your Quizz</h1>
+       
+        <div id="optionsDiv"> 
+            <div id="timer">⌚</div>
+            <p id="ques"></p>
+            
+            <input onclick="clicked()" name="options" value="1" type="radio" id="opt1-radio">
+            <label id="opt1" for="opt1-radio"></label><br>
 
+            <input onclick="clicked()" name="options" value="2" type="radio" id="opt2-radio">
+            <label id="opt2" for="opt2-radio"></label><br>
 
-        <input onclick="clicked() " name="options" value="2" type="radio">
-        <label id="opt2"></label><br>
+            <input onclick="clicked()" name="options" value="3" type="radio" id="opt3-radio">
+            <label id="opt3" for="opt3-radio"></label><br><br>
 
+            <button disabled id="btn" onclick="nextquestion()">next</button> 
+        </div>
 
-        <input onclick="clicked()" name="options" value="3" type="radio">
-        <label id="opt3"></label><br><br>
-
-        <button disabled id="btn" onclick="nextquestion()">next </button> 
+        <div id="resultDiv"></div>
     </div>
-   <div id="resultDiv"></div>
-
-
-</div>
 
     <script src="app.js"></script>
 </body>
