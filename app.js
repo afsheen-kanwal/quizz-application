@@ -1,12 +1,12 @@
+// Complete optimized and fixed Quiz Application Logic
 var questions = [
     {
         questions: "do you enjoy ........ ?",
         option1: "to hike",
-        option2: "hike",
+        option2: "hiking",
         option3: "to hiking",
-        correctoption: "hike"
-    }
-    ,
+        correctoption: "hiking" // Fixed correct answer grammatically for "enjoy + gerund"
+    },
     {
         questions: "sublime mean ?",
         option1: "great excellence",
@@ -69,86 +69,126 @@ var questions = [
         option2: "at",
         option3: "on",
         correctoption: "at"
-    },
+    }
+];
 
-]
-var ques = document.getElementById('ques')
-var opt1 = document.querySelector("#opt1")
-var opt2 = document.querySelector("#opt2")
-var opt3 = document.querySelector("#opt3")
-var index = 0
-var btn = document.querySelector("#btn")
+// DOM Element Selectors
+var ques = document.getElementById('ques');
+var opt1 = document.querySelector("#opt1");
+var opt2 = document.querySelector("#opt2");
+var opt3 = document.querySelector("#opt3");
+var btn = document.querySelector("#btn");
+var timer = document.getElementById('timer');
+var optionsDiv = document.getElementById('optionsDiv');
+var resultDiv = document.getElementById('resultDiv');
+
+// App state tracks
+var index = 0;
 var score = 0;
+var min = 2;  // Changed default timer initialization to a realistic 2 minutes for 10 questions
+var sec = 0;
 
-var min = 10
-var sec = 59
-var timer = document.getElementById('timer')
+// Format helper function to append padding zeros to single digits
+function formatTime(m, s) {
+    var paddedMin = m < 10 ? '0' + m : m;
+    var paddedSec = s < 10 ? '0' + s : s;
+    return `⏱️ ${paddedMin}:${paddedSec}`;
+}
+
+// Global Timer Interval Execution Loop
 var interval = setInterval(function () {
-
-    timer.innerHTML = `${min}:${sec}`
-    sec--
-    if (sec < 0) {
-        min--
-        sec = 59
-        if (min < 0) {
-            min = 1
-            sec = 50
-            nextquestion()
-        }
-    }
-}, 1000)
-
-function nextquestion() {
-
-    var getoptions = document.getElementsByName('options')
-
-    for (var i = 0; i < getoptions.length; i++) {
-        if (getoptions[i].checked) {
-
-            var selectedvalue = getoptions[i].value
-            var selectedques = questions[index - 1]['questions']
-            var selectA = questions[index - 1][`option${selectedvalue}`]
-            var correctOption = questions[index - 1]['correctoption']
-
-            if (selectA == correctOption) {
-                score++
-            }
-            console.log(selectA)
-        }
-        getoptions[i].checked = false
-    }
-    btn.disabled = true
-
-    if (index > questions.length - 1) {
-        var percentage = (score / questions.length) * 100;
-        ques.innerText = `Quiz khatam! Score: ${score}/${questions.length}`;
-        opt1.innerText = `Percentage: ${percentage.toFixed(2)}%`;
-        opt2.innerText = "";
-        opt3.innerText = "";
-        document.getElementById('optionsDiv').style.display = 'none';
-        btn.style.display = "none";
+    timer.innerHTML = formatTime(min, sec);
+    
+    if (min === 0 && sec === 0) {
         clearInterval(interval);
-        document.getElementById('resultDiv').innerHTML = `
-        <h3>Quiz khatam!</h3>
-        <p>Score: ${score}/${questions.length}</p>
-        <p>Percentage: ${percentage.toFixed(2)}%</p>`
+        showFinalResults();
+        return;
+    }
 
+    if (sec === 0) {
+        min--;
+        sec = 59;
     } else {
-        ques.innerText = questions[index].questions
-        opt1.innerText = questions[index].option1
-        opt2.innerText = questions[index].option2
-        opt3.innerText = questions[index].option3
-        index++
+        sec--;
+    }
+}, 1000);
 
+// Process Next Step and option validation pipeline
+function nextquestion() {
+    var getoptions = document.getElementsByName('options');
+    
+    // Evaluate correctness ONLY if a question was previously loaded
+    if (index > 0 && index <= questions.length) {
+        var previousQuestion = questions[index - 1];
+        
+        for (var i = 0; i < getoptions.length; i++) {
+            if (getoptions[i].checked) {
+                var selectedvalue = getoptions[i].value;
+                var selectA = previousQuestion[`option${selectedvalue}`];
+                var correctOption = previousQuestion['correctoption'];
+
+                if (selectA === correctOption) {
+                    score++;
+                }
+                break; // Stop iteration once selected row found
+            }
+        }
+    }
+
+    // Reset Checked Options UI State
+    for (var j = 0; j < getoptions.length; j++) {
+        getoptions[j].checked = false;
+    }
+    btn.disabled = true;
+
+    // Check if the deck has reached terminal index termination boundaries
+    if (index >= questions.length) {
+        clearInterval(interval);
+        showFinalResults();
+    } else {
+        // Render updated information to DOM Nodes safely
+        ques.innerText = questions[index].questions;
+        opt1.innerText = questions[index].option1;
+        opt2.innerText = questions[index].option2;
+        opt3.innerText = questions[index].option3;
+        index++;
     }
 }
-nextquestion()
 
-function clicked() {
-
-    btn.disabled = false
+// Display final formatted dashboard analytics safely
+function showFinalResults() {
+    var percentage = (score / questions.length) * 100;
+    optionsDiv.style.display = 'none';
+    timer.style.display = 'none';
+    
+    // Smooth custom presentation design delivery markup
+    resultDiv.innerHTML = `
+        <div style="font-size: 50px; margin-bottom: 10px;">🎉</div>
+        <h3>Quiz Khatam!</h3>
+        <div style="margin: 20px 0; font-size: 20px; color: #1f2937;">
+            Score: <strong style="color: #6366f1;">${score}</strong> / ${questions.length}
+        </div>
+        <div style="font-size: 16px; color: #4b5563; margin-bottom: 10px;">
+            Percentage: <strong>${percentage.toFixed(2)}%</strong>
+        </div>
+        <button onclick="window.location.reload();" style="
+            margin-top: 15px; 
+            padding: 10px 20px; 
+            background: #1f2937; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer;
+            font-weight: 600;
+        ">Try Again</button>
+    `;
+    resultDiv.style.display = 'block';
 }
 
+// Initial program boot trigger execution entry point
+nextquestion();
 
-
-
+// Invoked instantly whenever an interactive choice item gets changed
+function clicked() {
+    btn.disabled = false;
+}

@@ -5,105 +5,231 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Application</title>
+    <!-- Google Fonts for modern typography -->
+    <link href="https://googleapis.com" rel="stylesheet">
     <style>
+        /* Modern Reset and Variables */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-gradient: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #4b5563;
+            --option-bg: #f9fafb;
+            --option-border: #e5e7eb;
+            --option-active: #e0e7ff;
+            --option-active-border: #6366f1;
         }
 
         body {
-            background-color: #f4f4f9;
+            background: var(--bg-gradient);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 15px;
+            padding: 20px;
         }
 
+        /* Card Layout Container */
         .main {
             width: 100%;
-            max-width: 500px;
-            background-color: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 520px;
+            background-color: var(--card-bg);
+            padding: 35px 30px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+            transition: transform 0.3s ease;
         }
 
         h1 {
             text-align: center;
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: #333;
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+        }
+
+        /* Modernized Header & Pill Timer */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
         }
 
         #timer {
-            background-color: rgb(52, 211, 240);
-            width: 80px;
-            padding: 5px;
-            border: 2px solid rgb(245, 0, 0);
-            border-radius: 20px;
+            background-color: #fee2e2;
+            color: #ef4444;
+            padding: 6px 16px;
+            border: 1px solid #fca5a5;
+            border-radius: 50px;
             text-align: center;
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-       
-        #optionsDiv {
-            background-color: rgb(224, 187, 250);
-            padding: 25px;
-            border-radius: 8px;
-            width: 100%;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.08);
         }
 
         #ques {
             font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 15px;
+            font-weight: 600;
+            color: var(--text-main);
+            line-height: 1.4;
+            margin-bottom: 25px;
         }
 
-        
-        #optionsDiv input[type="radio"] {
-            margin-bottom: 15px;
-            transform: scale(1.2); 
+        /* Clean Options Layout Container */
+        #optionsDiv {
+            width: 100%;
+        }
+
+        /* Beautiful Custom Rows for Radio Selections */
+        .option-row {
+            display: flex;
+            align-items: center;
+            background-color: var(--option-bg);
+            border: 2px solid var(--option-border);
+            border-radius: 14px;
+            padding: 16px 20px;
+            margin-bottom: 14px;
             cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-row:hover {
+            background-color: #f3f4f6;
+            border-color: #d1d5db;
+            transform: translateY(-1px);
+        }
+
+        /* Functional Radio styling customization */
+        #optionsDiv input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #9ca3af;
+            border-radius: 50%;
+            outline: none;
+            margin: 0;
+            cursor: pointer;
+            display: grid;
+            place-content: center;
+            transition: all 0.2s ease;
+        }
+
+        #optionsDiv input[type="radio"]::before {
+            content: "";
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            transform: scale(0);
+            transition: 0.15s transform ease-in-out;
+            background-color: white;
+        }
+
+        #optionsDiv input[type="radio"]:checked {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        #optionsDiv input[type="radio"]:checked::before {
+            transform: scale(1);
+        }
+
+        /* Target row changes when radio is selected */
+        .option-row:has(input[type="radio"]:checked) {
+            background-color: var(--option-active);
+            border-color: var(--option-active-border);
         }
 
         #optionsDiv label {
-            font-size: 18px;
-            margin-left: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-left: 14px;
             cursor: pointer;
+            flex-grow: 1;
         }
 
+        .option-row:has(input[type="radio"]:checked) label {
+            color: var(--primary-hover);
+        }
+
+        /* Interactive Action Button */
         #btn {
             display: block;
-            width: 100%; 
-            padding: 12px;
+            width: 100%;
+            padding: 15px;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 600;
             color: white;
-            background-color: blue;
-            border: 2px solid black;
-            border-radius: 8px;
+            background-color: var(--primary);
+            border: none;
+            border-radius: 14px;
             cursor: pointer;
-            margin-top: 15px;
+            margin-top: 25px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+            text-transform: capitalize;
+        }
+
+        #btn:hover:not(:disabled) {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);
         }
 
         #btn:disabled {
-            background-color: #cccccc;
-            border-color: #999999;
+            background-color: #e5e7eb;
+            color: #9ca3af;
+            box-shadow: none;
             cursor: not-allowed;
         }
 
+        /* Clean score results container */
         #resultDiv {
-            background-color: rgb(242, 235, 247);
+            background-color: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #16a34a;
             padding: 20px;
-            border-radius: 8px;
-            margin-top: 20px;
+            border-radius: 16px;
+            margin-top: 25px;
             text-align: center;
             font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* Empty state styling for standard initial load hiding */
+        #resultDiv:empty {
+            display: none;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 480px) {
+            .main {
+                padding: 25px 20px;
+            }
+            h1 {
+                font-size: 22px;
+            }
+            #ques {
+                font-size: 18px;
+            }
+            .option-row {
+                padding: 14px 16px;
+            }
         }
     </style>
 </head>
@@ -111,20 +237,29 @@
 <body>
 
     <div class="main">
-        <h1>Start your Quizz</h1>
+        <div class="quiz-header">
+            <h1>Start your Quiz</h1>
+            <div id="timer">⏱️ 00:00</div>
+        </div>
        
         <div id="optionsDiv"> 
-            <div id="timer">⌚</div>
             <p id="ques"></p>
             
-            <input onclick="clicked()" name="options" value="1" type="radio" id="opt1-radio">
-            <label id="opt1" for="opt1-radio"></label><br>
+            <!-- Styled container rows around choices -->
+            <div class="option-row" onclick="document.getElementById('opt1-radio').click();">
+                <input onclick="clicked(); event.stopPropagation();" name="options" value="1" type="radio" id="opt1-radio">
+                <label id="opt1" for="opt1-radio"></label>
+            </div>
 
-            <input onclick="clicked()" name="options" value="2" type="radio" id="opt2-radio">
-            <label id="opt2" for="opt2-radio"></label><br>
+            <div class="option-row" onclick="document.getElementById('opt2-radio').click();">
+                <input onclick="clicked(); event.stopPropagation();" name="options" value="2" type="radio" id="opt2-radio">
+                <label id="opt2" for="opt2-radio"></label>
+            </div>
 
-            <input onclick="clicked()" name="options" value="3" type="radio" id="opt3-radio">
-            <label id="opt3" for="opt3-radio"></label><br><br>
+            <div class="option-row" onclick="document.getElementById('opt3-radio').click();">
+                <input onclick="clicked(); event.stopPropagation();" name="options" value="3" type="radio" id="opt3-radio">
+                <label id="opt3" for="opt3-radio"></label>
+            </div>
 
             <button disabled id="btn" onclick="nextquestion()">next</button> 
         </div>
