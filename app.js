@@ -1,11 +1,10 @@
-// Complete optimized and fixed Quiz Application Logic
 var questions = [
     {
         questions: "do you enjoy ........ ?",
         option1: "to hike",
         option2: "hiking",
         option3: "to hiking",
-        correctoption: "hiking" // Fixed correct answer grammatically for "enjoy + gerund"
+        correctoption: "hiking" 
     },
     {
         questions: "sublime mean ?",
@@ -72,7 +71,6 @@ var questions = [
     }
 ];
 
-// DOM Element Selectors
 var ques = document.getElementById('ques');
 var opt1 = document.querySelector("#opt1");
 var opt2 = document.querySelector("#opt2");
@@ -82,20 +80,17 @@ var timer = document.getElementById('timer');
 var optionsDiv = document.getElementById('optionsDiv');
 var resultDiv = document.getElementById('resultDiv');
 
-// App state tracks
 var index = 0;
 var score = 0;
-var min = 2;  // Changed default timer initialization to a realistic 2 minutes for 10 questions
+var min = 2;  
 var sec = 0;
 
-// Format helper function to append padding zeros to single digits
 function formatTime(m, s) {
     var paddedMin = m < 10 ? '0' + m : m;
     var paddedSec = s < 10 ? '0' + s : s;
     return `⏱️ ${paddedMin}:${paddedSec}`;
 }
 
-// Global Timer Interval Execution Loop
 var interval = setInterval(function () {
     timer.innerHTML = formatTime(min, sec);
     
@@ -113,11 +108,9 @@ var interval = setInterval(function () {
     }
 }, 1000);
 
-// Process Next Step and option validation pipeline
 function nextquestion() {
     var getoptions = document.getElementsByName('options');
     
-    // Evaluate correctness ONLY if a question was previously loaded
     if (index > 0 && index <= questions.length) {
         var previousQuestion = questions[index - 1];
         
@@ -130,23 +123,20 @@ function nextquestion() {
                 if (selectA === correctOption) {
                     score++;
                 }
-                break; // Stop iteration once selected row found
+                break; 
             }
         }
     }
 
-    // Reset Checked Options UI State
     for (var j = 0; j < getoptions.length; j++) {
         getoptions[j].checked = false;
     }
     btn.disabled = true;
 
-    // Check if the deck has reached terminal index termination boundaries
     if (index >= questions.length) {
         clearInterval(interval);
         showFinalResults();
     } else {
-        // Render updated information to DOM Nodes safely
         ques.innerText = questions[index].questions;
         opt1.innerText = questions[index].option1;
         opt2.innerText = questions[index].option2;
@@ -155,13 +145,11 @@ function nextquestion() {
     }
 }
 
-// Display final formatted dashboard analytics safely
 function showFinalResults() {
     var percentage = (score / questions.length) * 100;
     optionsDiv.style.display = 'none';
     timer.style.display = 'none';
     
-    // Smooth custom presentation design delivery markup
     resultDiv.innerHTML = `
         <div style="font-size: 50px; margin-bottom: 10px;">🎉</div>
         <h3>Quiz Khatam!</h3>
@@ -185,10 +173,8 @@ function showFinalResults() {
     resultDiv.style.display = 'block';
 }
 
-// Initial program boot trigger execution entry point
 nextquestion();
 
-// Invoked instantly whenever an interactive choice item gets changed
 function clicked() {
     btn.disabled = false;
 }
